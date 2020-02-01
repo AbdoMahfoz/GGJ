@@ -103,13 +103,14 @@ public class MechanicsUpdater : MonoBehaviour
             {
                 if (LoadAndValidate())
                 {
+                    StateChanger.RevertToDefaultState();
                     Debug.Log("Updated Attributes:\n" +
                     string.Join("\n", attributes.Select(u => $"{u.Key}={u.Value}")));
                 }
                 if (IsErrored)
                 {
                     IsErrored = false;
-                    Debug.Log("Errors resolved, reloading game");
+                    StateChanger.RevertToDefaultState();
                     Debug.Log("Updated Attributes:\n" +
                     string.Join("\n", attributes.Select(u => $"{u.Key}={u.Value}")));
                 }
