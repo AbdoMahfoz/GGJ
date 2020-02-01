@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class playerController : MonoBehaviour
 {
-    float gizRange = 0.3f;
-    bool dashAllowance;
+    float gizRange;
+    bool dashAllowance,isDashing;
+
+    float dashAnimationTiming;
 
     public float runSpeed , jumpForce, fireForce,dashForce;
     float moveInput;
@@ -21,6 +23,8 @@ public class playerController : MonoBehaviour
         myBody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         dashAllowance = true;
+        dashAnimationTiming = 0.2f;
+        gizRange = 0.3f;
     }
 
 
@@ -58,7 +62,35 @@ public class playerController : MonoBehaviour
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) return;
         movement();
         checkColForJump();
-        canDash();
+        // dealing with dashing.
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (dashAllowance)
+            {
+                dash();
+                anim.SetTrigger("dashing");
+                Invoke("endDash", dashAnimationTiming);
+            }
+        }
+        if (isDashing)
+        {
+            if (facingRight)
+            {
+                myBody.velocity = new Vector2(dashForce, 0);
+            }
+            else
+                myBody.velocity = new Vector2(-dashForce, 0);
+
+            if (dashAllowance)
+            {
+                dashAllowance = false;
+                Invoke("allowDashing", 2.0f);
+            }
+        }
+
+        // Dealing with falling animation.
+        if (myBody.velocity.y<0) anim.SetBool("falling", true);
+        else anim.SetBool("falling", false);
     }
     void movement()
     {
@@ -89,20 +121,19 @@ public class playerController : MonoBehaviour
         transform.localScale = transformScale;
     }
 
-    void canDash()
-    {
-        Debug.Log(dashAllowance);
-         
-        if (dashAllowance && Input.GetKeyDown(KeyCode.Z))
-        {
-            anim.SetTrigger("dashing");
-            myBody.velocity = new Vector2(dashForce, myBody.velocity.y);
-            Invoke("allowDashing", 2.0f);
-            dashAllowance = false;
-        }
-    }
+    
     void allowDashing()
     {
         dashAllowance = true;
+    }
+
+    void dash()
+    {
+        isDashing = true;
+    }
+    void endDash()
+    {
+        isDashing = false;
+        Invoke("allowDashing", 1.0f);
     }
 }
