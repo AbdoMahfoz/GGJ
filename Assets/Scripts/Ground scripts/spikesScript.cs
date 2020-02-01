@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class spikesScript : MonoBehaviour
 {
-    void OnCollisionEnter(Collision colInfo)
+    void OnCollisionEnter2D(Collision2D colInfo)
     {
         if (colInfo.collider.gameObject.tag == "Player")
         {
-            Debug.Log("Death");
-            // Fixed when 2D
+            Destroy(colInfo.collider.gameObject);
         }
     }
 }

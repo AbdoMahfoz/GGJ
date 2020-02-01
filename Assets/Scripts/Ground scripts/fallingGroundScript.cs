@@ -5,12 +5,12 @@ using UnityEngine;
 public class fallenGround : MonoBehaviour
 {
     Animator anim;
-    Rigidbody myBody;
+    Rigidbody2D myBody;
     // Start is called before the first frame update
     void Awake()
     {
         anim = GetComponent<Animator>();
-        myBody = GetComponent<Rigidbody>();
+        myBody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class fallenGround : MonoBehaviour
         
     }
 
-    void OnCollisionEnter(Collision colInfo)
+    void OnCollisionEnter2D(Collision2D colInfo)
     {
         if(colInfo.collider.gameObject.tag == "Player")
         {
