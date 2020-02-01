@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public abstract class StateChanger : MonoBehaviour
 {
     static List<StateChanger> elements = new List<StateChanger>();
+    protected bool ShouldRevert = false;
     public StateChanger()
     {
         elements.Add(this);
@@ -12,7 +14,15 @@ public abstract class StateChanger : MonoBehaviour
     {
         foreach (StateChanger s in elements)
         {
-            s.Invoke("RevertState", 0.0f);
+            s.ShouldRevert = true;
+        }
+    }
+    protected void CheckIfRevertRequested()
+    {
+        if (ShouldRevert)
+        {
+            ShouldRevert = false;
+            RevertState();
         }
     }
     abstract protected void RevertState();

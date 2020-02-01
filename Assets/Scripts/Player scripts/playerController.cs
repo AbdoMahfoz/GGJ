@@ -47,6 +47,7 @@ public class playerController : StateChanger
     }
     void Update()
     {
+        CheckIfRevertRequested();
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) return;
         movement();
         checkColForJump();
@@ -122,12 +123,10 @@ public class playerController : StateChanger
     protected override void RevertState()
     {
         transform.position = new Vector3(-5, -1, 0);
-        facingRight = true;
-        dashAllowance = false;
+        myBody.isKinematic = true;
+        myBody.velocity = Vector2.zero;
+        myBody.isKinematic = false;
+        dashAllowance = true;
         isDashing = false;
-        runSpeed = 4;
-        jumpForce = 5;
-        fireForce = 1;
-        dashForce = 15;
     }
 }

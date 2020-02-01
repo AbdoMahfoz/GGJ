@@ -98,7 +98,6 @@ public class MechanicsUpdater : MonoBehaviour
     {
         while (true)
         {
-            Thread.Sleep(1000);
             try
             {
                 if (LoadAndValidate())
@@ -127,6 +126,7 @@ public class MechanicsUpdater : MonoBehaviour
                     Debug.Log(ex.Message);
                 }
             }
+            Thread.Sleep(1000);
         }
     }
     void Start()
