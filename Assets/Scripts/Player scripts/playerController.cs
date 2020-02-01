@@ -1,50 +1,40 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class playerController : MonoBehaviour
+public class playerController : StateChanger
 {
     float gizRange;
-    bool dashAllowance,isDashing;
-
-    float dashAnimationTiming;
-
-    public float runSpeed , jumpForce, fireForce,dashForce;
+    bool dashAllowance, isDashing;
+    const float dashAnimationTiming = 0.3f;
+    public float runSpeed, jumpForce, fireForce, dashForce;
     float moveInput;
     bool facingRight = true;
     private Animator anim;
-    Vector2 range = new Vector2 (0.18f,0.1f);
+    Vector2 range = new Vector2(0.18f, 0.1f);
     public Transform groundCheck;
     public LayerMask groundLayer;
     Rigidbody2D myBody;
-
     void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         dashAllowance = true;
-        dashAnimationTiming = 0.2f;
         gizRange = 0.3f;
     }
-
-
-    // Shows a box around your player. 
-    // Helps you in determening the range needed to allow for jumping/touching the ground. 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.black;
         Gizmos.DrawWireSphere(groundCheck.position, gizRange);
     }
-    
-
     void checkColForJump()
     {
         Collider2D bottomHit = Physics2D.OverlapBox(groundCheck.position, range, 0.0f, groundLayer);
         Debug.Log(bottomHit);
-        if(bottomHit != null)
+        if (bottomHit != null)
         {
-            if(bottomHit.gameObject.tag == "Ground" && Input.GetKeyDown(KeyCode.Space))
+            if (bottomHit.gameObject.tag == "Ground" && Input.GetKeyDown(KeyCode.Space))
             {
+                int jumpAttr = MechanicsUpdater.GetValueOf("Jump");
+                float jumpForce = jumpAttr == 0 ? 0 : jumpAttr + 5;
                 myBody.velocity = new Vector2(myBody.velocity.x, jumpForce);
                 anim.SetBool("jumping", true);
             }
@@ -55,9 +45,7 @@ public class playerController : MonoBehaviour
         }
 
     }
-
-
-    void FixedUpdate()
+    void Update()
     {
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) return;
         movement();
@@ -74,12 +62,14 @@ public class playerController : MonoBehaviour
         }
         if (isDashing)
         {
+            int floatAttr = MechanicsUpdater.GetValueOf("Dash");
+            float dash = floatAttr == 0 ? 0 : ((floatAttr / 10.0f) * 40) + 10;
             if (facingRight)
             {
-                myBody.velocity = new Vector2(dashForce, 0);
+                myBody.velocity = new Vector2(dash, 0);
             }
             else
-                myBody.velocity = new Vector2(-dashForce, 0);
+                myBody.velocity = new Vector2(-dash, 0);
 
             if (dashAllowance)
             {
@@ -89,26 +79,22 @@ public class playerController : MonoBehaviour
         }
 
         // Dealing with falling animation.
-        if (myBody.velocity.y<0) anim.SetBool("falling", true);
+        if (myBody.velocity.y < 0) anim.SetBool("falling", true);
         else anim.SetBool("falling", false);
     }
     void movement()
     {
-
         moveInput = Input.GetAxisRaw("Horizontal") * runSpeed;
-
-        // Dealing with the running/idle animation.
         if (moveInput != 0)
         {
-                anim.SetBool("moving", true);
+            anim.SetBool("moving", true);
         }
         else
         {
             anim.SetBool("moving", false);
         }
-
         myBody.velocity = new Vector2(moveInput, myBody.velocity.y);
-        if (moveInput > 0 && !facingRight || moveInput<0 && facingRight)
+        if (moveInput > 0 && !facingRight || moveInput < 0 && facingRight)
         {
             flip();
         }
@@ -120,13 +106,10 @@ public class playerController : MonoBehaviour
         transformScale.x *= -1;
         transform.localScale = transformScale;
     }
-
-    
     void allowDashing()
     {
         dashAllowance = true;
     }
-
     void dash()
     {
         isDashing = true;
@@ -135,5 +118,9 @@ public class playerController : MonoBehaviour
     {
         isDashing = false;
         Invoke("allowDashing", 1.0f);
+    }
+    protected override void RevertState()
+    {
+        transform.position = new Vector3(-5, -1, 0);
     }
 }
