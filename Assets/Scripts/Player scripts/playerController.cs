@@ -4,36 +4,44 @@ using UnityEngine;
 
 public class playerController : MonoBehaviour
 {
-    public float runSpeed , jumpForce;
-    float jumpHeight = 0.5f;
+    float gizRange = 0.3f;
+    bool dashAllowance;
+
+    public float runSpeed , jumpForce, fireForce,dashForce;
     float moveInput;
     bool facingRight = true;
     private Animator anim;
-    Vector2 range = new Vector2 (0.18f,0.05f);
+    Vector2 range = new Vector2 (0.18f,0.1f);
     public Transform groundCheck;
     public LayerMask groundLayer;
     Rigidbody2D myBody;
-
-    // Sound
-    public AudioClip[] footStepsClips;
-    public AudioClip jumpClip;
 
     void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        dashAllowance = true;
     }
 
+
+    // Shows a box around your player. 
+    // Helps you in determening the range needed to allow for jumping/touching the ground. 
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(groundCheck.position, gizRange);
+    }
+    
 
     void checkColForJump()
     {
         Collider2D bottomHit = Physics2D.OverlapBox(groundCheck.position, range, 0.0f, groundLayer);
+        Debug.Log(bottomHit);
         if(bottomHit != null)
         {
             if(bottomHit.gameObject.tag == "Ground" && Input.GetKeyDown(KeyCode.Space))
             {
                 myBody.velocity = new Vector2(myBody.velocity.x, jumpForce);
-                soundManager.instance.playSfx(jumpClip,0.3f);
                 anim.SetBool("jumping", true);
             }
             else
@@ -41,33 +49,20 @@ public class playerController : MonoBehaviour
                 anim.SetBool("jumping", false);
             }
         }
+
     }
 
-    /* Helps you in determening the range needed to allow for jumping/touching the ground. 
-    // Shows a box around your player. 
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.black;
-        Gizmos.DrawWireCube(groundCheck.position, range);
-    }
-    */
 
     void FixedUpdate()
     {
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) return;
         movement();
         checkColForJump();
+        canDash();
     }
     void movement()
     {
 
-        if (Input.GetKeyUp(KeyCode.Space)) // How far the player can jump.
-        {
-            if (myBody.velocity.y > 0)
-            {
-                myBody.velocity = new Vector2(myBody.velocity.x, myBody.velocity.y * jumpHeight);
-            }
-        }
         moveInput = Input.GetAxisRaw("Horizontal") * runSpeed;
 
         // Dealing with the running/idle animation.
@@ -85,14 +80,6 @@ public class playerController : MonoBehaviour
         {
             flip();
         }
-        if(myBody.velocity.y < 0)
-        {
-            anim.SetBool("falling", true);
-        }
-        else
-        {
-            anim.SetBool("falling", false);
-        }
     }
     void flip()
     {
@@ -102,8 +89,20 @@ public class playerController : MonoBehaviour
         transform.localScale = transformScale;
     }
 
-    void runningSound()
+    void canDash()
     {
-        soundManager.instance.playRandSfx(footStepsClips);
+        Debug.Log(dashAllowance);
+         
+        if (dashAllowance && Input.GetKeyDown(KeyCode.Z))
+        {
+            anim.SetTrigger("dashing");
+            myBody.velocity = new Vector2(dashForce, myBody.velocity.y);
+            Invoke("allowDashing", 2.0f);
+            dashAllowance = false;
+        }
+    }
+    void allowDashing()
+    {
+        dashAllowance = true;
     }
 }
