@@ -12,7 +12,7 @@ public abstract class StateChanger : MonoBehaviour
     {
         foreach (StateChanger s in elements)
         {
-            s.RevertState();
+            s.Invoke("RevertState", 0.0f);
         }
     }
     abstract protected void RevertState();
