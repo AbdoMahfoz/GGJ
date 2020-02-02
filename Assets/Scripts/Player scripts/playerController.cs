@@ -9,7 +9,7 @@ public class playerController : StateChanger
     float moveInput;
     bool facingRight = true;
     private Animator anim;
-    Vector2 range = new Vector2(0.18f, 0.1f);
+    Vector2 range = new Vector2(0.18f, 1f);
     public Transform groundCheck;
     public LayerMask groundLayer;
     Rigidbody2D myBody;
@@ -29,7 +29,7 @@ public class playerController : StateChanger
     void checkColForJump()
     {
         Collider2D bottomHit = Physics2D.OverlapBox(groundCheck.position, range, 0.0f, groundLayer);
-        //Debug.Log(bottomHit);
+        Debug.Log(bottomHit);
         if (bottomHit != null)
         {
             if (bottomHit.gameObject.tag == "Ground" && Input.GetKeyDown(KeyCode.Space))
@@ -49,7 +49,7 @@ public class playerController : StateChanger
     void Update()
     {
         CheckIfRevertRequested();
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) return;
+        //if (anim.GetCurrentAnimatorStateInfo(0).IsName("Death")) return;
         movement();
         checkColForJump();
         // dealing with dashing.
@@ -80,7 +80,7 @@ public class playerController : StateChanger
         }
 
         // Dealing with falling animation.
-        if (myBody.velocity.y < 0) anim.SetBool("falling", true);
+        if (myBody.velocity.y < -1) anim.SetBool("falling", true);
         else anim.SetBool("falling", false);
     }
     void movement()
