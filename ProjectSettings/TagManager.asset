@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Ground
   - FireBall
+  - Under Ground
   layers:
   - Default
   - TransparentFX

@@ -123,7 +123,7 @@ public class playerController : StateChanger
     }
     protected override void RevertState()
     {
-        transform.position = new Vector3(-5, -1, 0);
+        transform.position = new Vector3(-7, 1, 0);
         myBody.isKinematic = true;
         myBody.velocity = Vector2.zero;
         myBody.isKinematic = false;
