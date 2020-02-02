@@ -766,7 +766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallelfx: 0.5
+  parallelfx: 0.4
 --- !u!1 &248973128 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2485111036069955889, guid: 3a864877ddd100b4b8585d5fed9d8e9e,
@@ -6058,7 +6058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallelfx: 0.6
+  parallelfx: 0.3
 --- !u!1 &1282873858
 GameObject:
   m_ObjectHideFlags: 0
@@ -7267,7 +7267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallelfx: 0.4
+  parallelfx: 0.5
 --- !u!1 &1826278094
 GameObject:
   m_ObjectHideFlags: 0
@@ -8041,7 +8041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallelfx: 0.3
+  parallelfx: 0.6
 --- !u!1 &2038247350
 GameObject:
   m_ObjectHideFlags: 0
