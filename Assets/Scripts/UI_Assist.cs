@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class UI_Assist : MonoBehaviour
 {
     [SerializeField] private TextWriter textWriter;
+    public string Text;
     private Text messageText;
 
     private void Awake()
@@ -14,6 +15,6 @@ public class UI_Assist : MonoBehaviour
 
     private void Start()
     {
-        textWriter.AddWriter(messageText, "Hala bel 5ames", .1f, true);
+        textWriter.AddWriter(messageText, Text, .1f, true);
     }
 }

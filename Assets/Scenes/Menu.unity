@@ -170,6 +170,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textWriter: {fileID: 241703824}
+  Text: Welcome to my 2D platformer.\nThis game is broken and I will not fix it.\nIf
+    you want to, use the attributes.ini file in the game directory to fix the mechanics.\nGood
+    luck.
 --- !u!1 &229806844
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,8 +605,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 290.9, y: 290.9}
+  m_AnchoredPosition: {x: 2.9, y: 76}
+  m_SizeDelta: {x: 799.6, y: 442.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &824678756
 MonoBehaviour:
