@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class fallenGround : MonoBehaviour
+public class fallingGroundScript : StateChanger
 {
     Animator anim;
     Rigidbody2D myBody;
@@ -32,5 +32,10 @@ public class fallenGround : MonoBehaviour
     {
         anim.SetBool("falling", false);
         myBody.isKinematic = true;
+    }
+
+    protected override void RevertState()
+    {
+        throw new System.NotImplementedException();
     }
 }
