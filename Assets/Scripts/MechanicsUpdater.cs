@@ -112,8 +112,6 @@ public class MechanicsUpdater : MonoBehaviour
                 if (LoadAndValidate())
                 {
                     StateChanger.RevertToDefaultState();
-                    Debug.Log("Updated Attributes:\n" +
-                    string.Join("\n", attributes.Select(u => $"{u.Key}={u.Value}")));
                 }
                 if (IsErrored)
                 {
@@ -124,7 +122,6 @@ public class MechanicsUpdater : MonoBehaviour
             {
                 if (!IsErrored)
                 {
-                    Debug.Log("Switched to error screen");
                     IsErrored = true;
                 }
                 if (ex.Message != lastError)
@@ -134,7 +131,7 @@ public class MechanicsUpdater : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.Log($"Watcher died: {ex.Message}");
+                Debug.LogError($"Watcher died: {ex.Message}");
             }
             finally
             {

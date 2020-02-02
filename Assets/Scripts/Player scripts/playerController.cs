@@ -29,7 +29,6 @@ public class playerController : StateChanger
     void checkColForJump()
     {
         Collider2D bottomHit = Physics2D.OverlapBox(groundCheck.position, range, 0.0f, groundLayer);
-        Debug.Log(bottomHit);
         if (bottomHit != null)
         {
             if (bottomHit.gameObject.tag == "Ground" && Input.GetKeyDown(KeyCode.Space))
