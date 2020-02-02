@@ -20,10 +20,13 @@ public class MechanicsUpdater : MonoBehaviour
         public int DefaultValue;
     }
     public AttributesText Text;
+    public Text ErrorText;
+    public Image BlackBg;
     string filePath = Path.Combine(Directory.GetCurrentDirectory(), "attributes.ini");
     bool IsErrored = false;
     string lastError = "";
     public AttriubteElement[] Attributes;
+    bool errorApplied = false;
     static List<Action<int>> CallBacks = new List<Action<int>>();
     static Dictionary<string, int> attributes = new Dictionary<string, int>();
     void InitializeDictionary()
@@ -56,11 +59,13 @@ public class MechanicsUpdater : MonoBehaviour
             string[] line = reader.ReadLine().Split('=');
             if (line.Length != 2)
             {
+                reader.Close();
                 throw new InvalidAttributesFileException($"Line {lineIdx + 1} is not in the correct format");
             }
             string key = line[0]; string value = line[1];
             if (ExisitingTokens.Contains(key))
             {
+                reader.Close();
                 throw new InvalidAttributesFileException($"File contains more than a single definition for attriubte {key}");
             }
             if (attributes.ContainsKey(key))
@@ -82,6 +87,7 @@ public class MechanicsUpdater : MonoBehaviour
                 }
                 catch (FormatException)
                 {
+                    reader.Close();
                     throw new InvalidAttributesFileException($"Attribute {key}'s value is non-numeric: {value}");
                 }
             }
@@ -132,7 +138,7 @@ public class MechanicsUpdater : MonoBehaviour
                 }
                 if (ex.Message != lastError)
                 {
-                    Debug.Log(ex.Message);
+                    lastError = ex.Message;
                 }
             }
             catch (Exception ex)
@@ -153,6 +159,25 @@ public class MechanicsUpdater : MonoBehaviour
             RewriteFile();
         }
         Task.Run(Watch);
+    }
+    void Update()
+    {
+        if (IsErrored)
+        {
+            if (!errorApplied)
+            {
+                errorApplied = true;
+                BlackBg.gameObject.SetActive(true);
+                ErrorText.gameObject.SetActive(true);
+                ErrorText.text = lastError;
+            }
+        }
+        else if (errorApplied)
+        {
+            errorApplied = false;
+            BlackBg.gameObject.SetActive(false);
+            ErrorText.gameObject.SetActive(false);
+        }
     }
     public static void Subscribe(Action<int> CallBack)
     {
