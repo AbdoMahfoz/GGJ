@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine.UI;
 
 public class InvalidAttributesFileException : Exception
 {
@@ -18,6 +19,7 @@ public class MechanicsUpdater : MonoBehaviour
         public string Name;
         public int DefaultValue;
     }
+    public AttributesText Text;
     string filePath = Path.Combine(Directory.GetCurrentDirectory(), "attributes.ini");
     bool IsErrored = false;
     string lastError = "";
@@ -30,6 +32,8 @@ public class MechanicsUpdater : MonoBehaviour
         {
             attributes[attr.Name] = attr.DefaultValue;
         }
+        Text.Buffer = string.Join("\n", attributes.Select(u => $"{u.Key}={u.Value}"));
+        Text.BufferLoaded = true;
     }
     void RewriteFile()
     {
@@ -112,6 +116,8 @@ public class MechanicsUpdater : MonoBehaviour
                 if (LoadAndValidate())
                 {
                     StateChanger.RevertToDefaultState();
+                    Text.Buffer = string.Join("\n", attributes.Select(u => $"{u.Key}={u.Value}"));
+                    Text.BufferLoaded = true;
                 }
                 if (IsErrored)
                 {
