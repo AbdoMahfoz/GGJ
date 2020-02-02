@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class fallingGroundScript : StateChanger
 {
+    //GameObject startObj;
     Rigidbody2D myBody;
-    Transform startPos; 
+    Vector3 startPos;
+    bool loading;
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
+
         myBody = GetComponent<Rigidbody2D>();
         myBody.bodyType = RigidbodyType2D.Kinematic;
-        startPos.position = transform.position;
+        startPos = transform.position;
     }
-
     // Update is called once per frame
+
     void Update()
     {
         CheckIfRevertRequested();
@@ -24,19 +27,27 @@ public class fallingGroundScript : StateChanger
     {
         if(colInfo.collider.gameObject.tag == "Player")
         {
-            StartCoroutine(fallingDown);
+            if (!loading)
+            {
+                loading = true;
+                Invoke(nameof(fallingDown), 1.0f);
+            }
+
         }
     }
-    IEnumerator fallingDown()
+    void fallingDown()
     {
-        yield return new WaitForSeconds(1.0f);
-        myBody.bodyType = RigidbodyType2D.Dynamic;
-
+        if(loading)
+        {
+            myBody.bodyType = RigidbodyType2D.Dynamic;
+        }
     }
 
     protected override void RevertState()
     {
-        myBody.bodyType = RigidbodyType2D.Kinematic;
-        transform.position = startPos.position;
+        myBody.isKinematic = true;
+        myBody.velocity = Vector3.zero;
+        loading = false;
+        transform.position = startPos;
     }
 }
