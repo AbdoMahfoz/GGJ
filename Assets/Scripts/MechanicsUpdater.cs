@@ -22,6 +22,7 @@ public class MechanicsUpdater : MonoBehaviour
     bool IsErrored = false;
     string lastError = "";
     public AttriubteElement[] Attributes;
+    static List<Action<int>> CallBacks = new List<Action<int>>();
     static Dictionary<string, int> attributes = new Dictionary<string, int>();
     void InitializeDictionary()
     {
@@ -51,30 +52,38 @@ public class MechanicsUpdater : MonoBehaviour
             string[] line = reader.ReadLine().Split('=');
             if (line.Length != 2)
             {
-                throw new InvalidAttributesFileException($"Line {lineIdx} is not in the correct format");
+                throw new InvalidAttributesFileException($"Line {lineIdx + 1} is not in the correct format");
             }
             string key = line[0]; string value = line[1];
-            if (!attributes.ContainsKey(key))
-            {
-                mustBeReWritten = true;
-            }
             if (ExisitingTokens.Contains(key))
             {
                 throw new InvalidAttributesFileException($"File contains more than a single definition for attriubte {key}");
             }
-            ExisitingTokens.Add(key);
-            try
+            if (attributes.ContainsKey(key))
             {
-                int val = int.Parse(value);
-                if (attributes[key] != val)
+                ExisitingTokens.Add(key);
+                try
                 {
-                    changesExist = true;
+                    int val = int.Parse(value);
+                    if (val < 0 || val > 10)
+                    {
+                        mustBeReWritten = true;
+                        val = Mathf.Clamp(val, 0, 10);
+                    }
+                    if (attributes[key] != val)
+                    {
+                        changesExist = true;
+                    }
+                    attributes[key] = val;
                 }
-                attributes[key] = val;
+                catch (FormatException)
+                {
+                    throw new InvalidAttributesFileException($"Attribute {key}'s value is non-numeric: {value}");
+                }
             }
-            catch (FormatException)
+            else
             {
-                throw new InvalidAttributesFileException($"Attribute {key}'s value is non-numeric: {value}");
+                mustBeReWritten = true;
             }
             lineIdx++;
         }
@@ -83,7 +92,7 @@ public class MechanicsUpdater : MonoBehaviour
         {
             RewriteFile();
         }
-        if (ExisitingTokens.Count < attributes.Keys.Count)
+        else if (ExisitingTokens.Count < attributes.Keys.Count)
         {
             StreamWriter writer = File.AppendText(filePath);
             foreach (var missingAttribute in attributes.Where(u => !ExisitingTokens.Contains(u.Key)))
@@ -109,9 +118,6 @@ public class MechanicsUpdater : MonoBehaviour
                 if (IsErrored)
                 {
                     IsErrored = false;
-                    StateChanger.RevertToDefaultState();
-                    Debug.Log("Updated Attributes:\n" +
-                    string.Join("\n", attributes.Select(u => $"{u.Key}={u.Value}")));
                 }
             }
             catch (InvalidAttributesFileException ex)
@@ -119,14 +125,21 @@ public class MechanicsUpdater : MonoBehaviour
                 if (!IsErrored)
                 {
                     Debug.Log("Switched to error screen");
+                    IsErrored = true;
                 }
-                IsErrored = true;
                 if (ex.Message != lastError)
                 {
                     Debug.Log(ex.Message);
                 }
             }
-            Thread.Sleep(1000);
+            catch (Exception ex)
+            {
+                Debug.Log($"Watcher died: {ex.Message}");
+            }
+            finally
+            {
+                Thread.Sleep(1000);
+            }
         }
     }
     void Start()
@@ -138,8 +151,17 @@ public class MechanicsUpdater : MonoBehaviour
         }
         Task.Run(Watch);
     }
+    public static void Subscribe(Action<int> CallBack)
+    {
+        CallBacks.Add(CallBack);
+    }
     public static int GetValueOf(string Attribute)
     {
-        return attributes[Attribute];
+        int val = attributes[Attribute];
+        foreach (var callBack in CallBacks)
+        {
+            callBack(val);
+        }
+        return val;
     }
 }

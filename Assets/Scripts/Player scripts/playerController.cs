@@ -13,6 +13,7 @@ public class playerController : StateChanger
     public Transform groundCheck;
     public LayerMask groundLayer;
     Rigidbody2D myBody;
+    int floatAttr;
     void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
@@ -63,7 +64,6 @@ public class playerController : StateChanger
         }
         if (isDashing)
         {
-            int floatAttr = MechanicsUpdater.GetValueOf("Dash");
             float dash = floatAttr == 0 ? 0 : ((floatAttr / 10.0f) * 40) + 10;
             if (facingRight)
             {
@@ -114,6 +114,7 @@ public class playerController : StateChanger
     void dash()
     {
         isDashing = true;
+        floatAttr = MechanicsUpdater.GetValueOf("Dash");
     }
     void endDash()
     {
