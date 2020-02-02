@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Energy : StateChanger
 {
     public int MaxEnergy;
     int CurrentEnergy;
-    public RectTransform Image;
+    public Image Image;
+    public Text Text;
     void Start()
     {
         CurrentEnergy = MaxEnergy;
         MechanicsUpdater.Subscribe(CallBack);
+        Text.text = "100%";
     }
     void Update()
     {
@@ -17,18 +20,20 @@ public class Energy : StateChanger
     void CallBack(int e)
     {
         CurrentEnergy -= e;
+        Text.text = $"{Mathf.RoundToInt((CurrentEnergy / (float)MaxEnergy) * 100.0f)}%";
         if (CurrentEnergy <= 0.0f)
         {
             StateChanger.RevertToDefaultState();
         }
         else
         {
-            Image.transform.localScale = new Vector3((CurrentEnergy / (float)MaxEnergy), 1.0f, 1.0f);
+            Image.fillAmount = Mathf.RoundToInt((CurrentEnergy / (float)MaxEnergy) * 24) / 24.0f;
         }
     }
     protected override void RevertState()
     {
         CurrentEnergy = MaxEnergy;
-        Image.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        Text.text = "100%";
+        Image.fillAmount = 1.0f;
     }
 }
