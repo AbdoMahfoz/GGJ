@@ -9,7 +9,7 @@ public class soundManager : MonoBehaviour
     public AudioSource sfxMgr, sfxMgr2;
     public AudioSource themeSongMgr;
 
-    public AudioClip[] themeSongs;
+    public AudioClip themeSong;
 
 
     void Awake()
@@ -34,7 +34,7 @@ public class soundManager : MonoBehaviour
     {
         if(!themeSongMgr.isPlaying)
         {
-            themeSongMgr.clip = themeSongs[Random.Range(0, themeSongs.Length)];
+            themeSongMgr.clip = themeSong;
             themeSongMgr.Play();
         }
     }
@@ -53,20 +53,5 @@ public class soundManager : MonoBehaviour
             sfxMgr2.volume = vol;
             sfxMgr2.Play();
         }
-    }
-    public void playRandSfx(AudioClip[] audioClips)
-    {
-        if (!sfxMgr.isPlaying)
-        {
-            sfxMgr.clip = audioClips[Random.Range(0,audioClips.Length)];
-            sfxMgr.volume = Random.Range(0.4f,0.9f);
-            sfxMgr.Play();
-        }
-        /*else
-        {
-            sfxMgr.clip = audioClips[Random.Range(0, audioClips.Length)];
-            sfxMgr.volume = Random.Range(0.3f, 0.6f);
-            sfxMgr2.Play();
-        }*/
     }
 }

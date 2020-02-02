@@ -12,6 +12,10 @@ public class playerController : StateChanger
     Vector2 range = new Vector2(0.18f, 1f);
     public Transform groundCheck;
     public LayerMask groundLayer;
+    public AudioClip jumpSound;
+    public AudioClip movementSound;
+    public AudioClip dashSound;
+
     Rigidbody2D myBody;
     int floatAttr;
     void Awake()
@@ -37,6 +41,7 @@ public class playerController : StateChanger
                 float jumpForce = jumpAttr == 0 ? 0 : jumpAttr + 5;
                 myBody.velocity = new Vector2(myBody.velocity.x, jumpForce);
                 anim.SetBool("jumping", true);
+                soundManager.instance.playSfx(jumpSound, 0.3f);
             }
             else
             {
@@ -58,6 +63,7 @@ public class playerController : StateChanger
             {
                 dash();
                 anim.SetTrigger("dashing");
+                soundManager.instance.playSfx(dashSound, 0.5f);
                 Invoke("endDash", dashAnimationTiming);
             }
         }
@@ -88,6 +94,7 @@ public class playerController : StateChanger
         if (moveInput != 0)
         {
             anim.SetBool("moving", true);
+            soundManager.instance.playSfx(movementSound, 0.5f);
         }
         else
         {
