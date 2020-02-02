@@ -1155,7 +1155,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.6888142, y: 0.9582883, z: -10}
+  m_LocalPosition: {x: -2.6853352, y: 0.9582883, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -8134,7 +8134,7 @@ GameObject:
   - component: {fileID: 2059045141}
   - component: {fileID: 2059045145}
   m_Layer: 0
-  m_Name: Boulder
+  m_Name: Tire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8153,9 +8153,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.02, y: -0.01}
+  m_Offset: {x: -0.020000122, y: 0.08492085}
   serializedVersion: 2
-  m_Radius: 1.1242743
+  m_Radius: 2.6430633
 --- !u!212 &2059045143
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8193,7 +8193,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: cea8b79b7dbe06e4082a84992109ac02, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 791b2d82128767b48a7996430e7d9612, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8212,8 +8212,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059045140}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 70.71196, y: 6.0099216, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 70.49, y: 5.75, z: 0}
+  m_LocalScale: {x: 0.454125, y: 0.454125, z: 0.454125}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
