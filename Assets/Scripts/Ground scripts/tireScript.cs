@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class rockScript : StateChanger
+public class tireScript : StateChanger
 {
     bool moving;
     Rigidbody2D myBody;
